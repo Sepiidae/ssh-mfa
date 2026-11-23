@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Test / tooling caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local config / secrets
+/etc/ssh-mfa/
+*.db
+*.sqlite

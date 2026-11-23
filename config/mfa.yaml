@@ -1,0 +1,50 @@
+# /etc/ssh-mfa/mfa.yaml — shared config for the sshd plugin (watcher + AKC).
+# The same store section is used by the auth server so writer and reader agree.
+
+# --- Shared store (the pending/approved requests) -------------------------
+# Pick ONE backend. The watcher (target host) and the auth server both read it.
+store:
+  backend: sqlite              # sqlite | redis | postgres
+  path: /var/lib/ssh-mfa/approvals.db
+  # redis:  { host: redis.internal, port: 6379, db: 3, prefix: ssh-mfa }
+  # postgres: { dsn: postgresql://mfa:mfa@db.internal/mfa }
+
+# --- Auth server ----------------------------------------------------------
+auth_server: https://auth.example.org/mfa
+
+# --- Watcher --------------------------------------------------------------
+# How often the watcher polls the auth server (seconds).
+poll_interval: 15
+
+# --- Approval lifetime ----------------------------------------------------
+# How long a granted approval lasts before it expires (seconds).
+# 86400 = 1 day, 604800 = 1 week, 2592000 = 30 days.
+approval_ttl: 86400
+
+# --- SAML (auth server only) ---------------------------------------------
+saml:
+  enabled: true
+  # Configure your IdP. Preferred: point at the IdP's metadata document, and
+  # the SP derives entity_id / sso_url / slo_url / x509cert from it.
+  idp:
+    metadata_url: https://idp.example.org/idp.xml
+    # For a federation aggregate, use federation_metadata_url and select the IdP:
+    #   federation_metadata_url: https://idp.example.org/federation.xml
+    #   entity_id: https://idp.example.org/idp
+  # Explicit values override anything fetched from metadata:
+  # idp:
+  #   entity_id: https://idp.example.org/saml
+  #   sso_url: https://idp.example.org/sso
+  #   slo_url: https://idp.example.org/slo
+  #   x509cert: |
+  #     -----BEGIN CERTIFICATE----- ... -----END CERTIFICATE-----
+  # sp:
+  #   entity_id: https://auth.example.org/mfa/saml
+  #   acs_url: https://auth.example.org/mfa/saml/acs
+  #   sls_url: https://auth.example.org/mfa/saml/sls
+
+# --- Authorization policy (auth server only) -----------------------------
+authz:
+  # Default: the IdP subject's local part must match the target username.
+  # Uncomment to restrict to specific IdP identities regardless of username.
+  # allow_identities: [alice@example.org, bob@example.org]

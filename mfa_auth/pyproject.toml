@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mfa-auth"
+version = "0.1.0"
+description = "SAML 2.0 authentication server for SSH MFA"
+requires-python = ">=3.9"
+dependencies = [
+    "flask>=2.3",
+    "python-saml>=2.16",
+    "mfa-store",
+]
+
+[project.scripts]
+mfa-auth = "mfa_auth.server:main"
+
+[tool.setuptools.packages.find]
+include = ["mfa_auth*"]

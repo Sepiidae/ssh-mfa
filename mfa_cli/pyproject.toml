@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mfa-ssh"
+version = "0.1.0"
+description = "User-facing CLI that drives an SSH MFA login via SAML"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+mfa-ssh = "mfa_ssh.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["mfa_ssh*"]

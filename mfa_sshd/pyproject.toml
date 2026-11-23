@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mfa-sshd"
+version = "0.1.0"
+description = "sshd plugin (AuthorizedKeysCommand + watcher) for SSH MFA"
+requires-python = ">=3.9"
+dependencies = [
+    "mfa-store",
+]
+
+[project.scripts]
+mfa-sshd = "mfa_sshd.server:main"
+
+[tool.setuptools.packages.find]
+include = ["mfa_sshd*"]

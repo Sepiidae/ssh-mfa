@@ -1,0 +1,22 @@
+# /etc/systemd/system/ssh-mfa-auth.service
+#
+# The authentication server (SAML Service Provider). Run this ONCE, on the
+# auth host (e.g. auth.example.org). Sits behind a TLS-terminating reverse proxy;
+# the SAML ACS endpoint requires https.
+#
+#   sudo systemctl enable --now ssh-mfa-auth.service
+
+[Unit]
+Description=SSH MFA authentication server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mfa-auth --host 127.0.0.1 --port 8443
+Environment=MFA_AUTH_CONFIG=/etc/ssh-mfa/mfa.yaml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

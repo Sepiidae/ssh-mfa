@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mfa-store"
+version = "0.1.0"
+description = "Pluggable shared store (SQLite / Redis / Postgres) for SSH MFA approvals"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+redis = ["redis>=4.0"]
+postgres = ["psycopg[binary]>=3.1"]
+all = ["redis>=4.0", "psycopg[binary]>=3.1"]
+
+[tool.setuptools.packages.find]
+include = ["mfa_store*"]

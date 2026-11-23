@@ -1,0 +1,25 @@
+# /etc/systemd/system/ssh-mfa-watcher.service
+#
+# Background watcher: polls the auth server for newly-granted approvals and
+# replicates them into this host's local store, so the AuthorizedKeysCommand
+# never touches the network during a login handshake.
+#
+# Install on every TARGET host:
+#   sudo systemctl enable --now ssh-mfa-watcher.service
+
+[Unit]
+Description=SSH MFA approval watcher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mfa-sshd watch
+# Point at the shared config (store backend + auth server + poll interval).
+Environment=MFA_SSHD_CONFIG=/etc/ssh-mfa/mfa.yaml
+Restart=on-failure
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target
